@@ -8,7 +8,6 @@ dotenv.config();
 
 import connectDB from "./db/database.js";
 
-
 connectDB();
 
 

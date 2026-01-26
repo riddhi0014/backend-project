@@ -3,6 +3,24 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 const userSchema=new Schema({
+  username :{type:String,required:true,unique:true,trim:true,lowercase:true,index:true},
+
+  password :{type:String,required:[true,'Password is required'],minlength:[6,'Password must be at least 6 characters long']},
+
+  email :{type:String,required:true,unique:true,trim:true,lowercase:true},
+
+  fullname :{type:String,required:true,trim:true,index:true},
+
+  avatar:{type:String,     // cloudinary url
+  required:[true,'Avatar is required']},
+
+  coverImage: {
+    type: String,}, // cloudinary url
+
+
+  watchHistory:[{type:Schema.Types.ObjectId, ref:'Video'}],
+
+  refreshToken:{type:String,default:""},
 
 },
   {timestamps:true}

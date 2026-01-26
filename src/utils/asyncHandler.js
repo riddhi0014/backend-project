@@ -1,4 +1,4 @@
-export {asyncHandler}
+
 
 const asyncHandler=(fn)=>async(req,res,next)=>{
   try{
@@ -11,6 +11,8 @@ const asyncHandler=(fn)=>async(req,res,next)=>{
    });
   }
 }
+
+export {asyncHandler}
 
 // const asyncHandler=(requestHandler)=>{           //another way to write the wrapper fucntion i.e asyncHandler
 //   Promise.resolve(requestHandler(req,res,next))

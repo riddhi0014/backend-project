@@ -3,10 +3,17 @@
 // import {DB_NAME} from "./constants.js"
 
 // require('dotenv').config({path:'./env'})  //completely ok but inconsistent because we use import elsewhere
-import dotenv from "dotenv";
-dotenv.config();
+
+import "dotenv/config";
 import connectDB from "./db/database.js";
 import {app} from './app.js'
+
+
+console.log("ENV CHECK →",  //temporary
+  process.env.CLOUDINARY_CLOUD_NAME,
+  process.env.CLOUDINARY_API_KEY,
+  process.env.CLOUDINARY_API_SECRET
+);
 
 
 connectDB()

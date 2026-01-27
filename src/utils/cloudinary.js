@@ -1,3 +1,4 @@
+
 import {v2 as cloudinary} from "cloudinary";
 import fs from "fs";
 
@@ -13,16 +14,29 @@ try{
 if(!localFilePath)  throw new Error("Local file path is required");
   //uploading to cloudinary
   const response=await cloudinary.uploader.upload(localFilePath,{
-    response_type:'auto',
+    resource_type:'auto',
   });
   //file uploaded successfully
-  console.log("File uploaded to Cloudinary successfully:",response.url);
-  return response;}
 
-catch(error){
-  fs.unlinkSync(localFilePath); //removing the locally saved temporary file as the upload operation got failed.
+  // console.log("File uploaded to Cloudinary successfully:",response.url); //only for testing
+  // return response;
+ 
+  //deleting the local file
+  fs.unlinkSync(localFilePath);
+  return response;
+
+}
+
+catch (error) {
+
+  console.error("Cloudinary upload error:", error); //temporary
+
+  if (localFilePath && fs.existsSync(localFilePath)) {
+    fs.unlinkSync(localFilePath);
+  }
   return null;
 }
+
 }
 
 export {uploadToCloudinary};

@@ -9,7 +9,7 @@ const userSchema=new Schema({
 
   email :{type:String,required:true,unique:true,trim:true,lowercase:true},
 
-  fullname :{type:String,required:true,trim:true,index:true},
+  fullName :{type:String,required:true,trim:true,index:true},
 
   avatar:{type:String,     // cloudinary url
   required:[true,'Avatar is required']},
@@ -27,11 +27,12 @@ const userSchema=new Schema({
 );
 
 
-userSchema.pre("save",async function(next)
-{ if(!this.isModified(this.password)) return next();  //Why is async await used here? because hashing is a time taking process
+userSchema.pre("save",async function()
+{ if(!this.isModified("password")) return;  //Why is async await used here? because hashing is a time taking process
 
   this.password=await bcrypt.hash(this.password,10); //These 10=salt rounds=rounds of hashing
-  next();
+  
+  // next(); //don't use next here because mongoose pre hooks support promises natively
 });
 
 userSchema.methods.isPasswordCorrect=async function(entered_password)
@@ -44,7 +45,7 @@ userSchema.methods.generateAccessToken=function()
     {_id: this._id,
     email: this.email,
     username: this.username,
-  fullname: this.fullname},
+  fullName: this.fullName},
 
   process.env.ACCESS_TOKEN_SECRET,
 

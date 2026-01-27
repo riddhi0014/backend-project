@@ -29,7 +29,7 @@ const registerUser = asyncHandler(async(req,res)=>{
   };
    //we can add many more other validations like checking if the email has the @ symbol ,etc. These validations are often written in a separate file and then used accordingly.
   
-
+// console.log(req.body); //testing
 
  //check if user already exists
  const checkUserExistence= await User.findOne({
@@ -40,11 +40,13 @@ const registerUser = asyncHandler(async(req,res)=>{
  });
  if(checkUserExistence){throw new ApiError(409,"User with given username or email already exists");}
  
+// console.log(req.files); //testing
 
  //check for avatar image and coverImage
- const avatarLocalPath=req.files?.avatar[0]?.path;
-
- const coverImageLocalPath=req.files?.coverImage[0]?.path;
+ const avatarLocalPath=req.files?.avatar?.[0]?.path;     //(This is OPTIONAL CHAINING)
+ 
+ const coverImageLocalPath=req.files?.coverImage?.[0]?.path;;    //(This is OPTIONAL CHAINING) 
+ //note: don't write req.files?.coverImage[0]?.path because if coverImage itself is undefined, then its [0] is not accessable. similarly for avatar also.
 
  if(!avatarLocalPath) {throw new ApiError(400,"Avatar image is required");}
 
@@ -62,16 +64,20 @@ const user=await User.create
   { username,
     email,
     password,
-    fullname,
+    fullName,
     avatar:avatar.url,
     coverImage: coverImage?.url || "",
     username:username.toLowerCase()
   }
 )
 
+console.log(user); //testing
+
 const createdUser=await User.findById(user._id).select("-password -refreshToken"); //If user is created, then removing password and refresh token from response.
 
 if(!createdUser){throw new ApiError(500,"Something went wrong while registering the user");} //if user not created
+
+// console.log(createdUser); //testing (but no need even of testing this because response is 'createdUser' itself.see return statement below)
 
 //if user is created then send response
 return res.status(201).json(new ApiResponse(200,createdUser,"User registered successfully"));
@@ -80,3 +86,7 @@ return res.status(201).json(new ApiResponse(200,createdUser,"User registered suc
 });
 
 export {registerUser};
+
+
+//NOTE: here 'user' is the actual user created in the db,
+// whereas 'createdUser' is the response received after removing password and refresh token from 'user'.
